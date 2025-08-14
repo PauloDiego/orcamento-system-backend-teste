@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html ng-app="orcamentoApp" lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F. Autos - Sistema de Orçamento</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AngularJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 1200px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-weight: bold;
+            font-size: 2.5rem;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .form-section {
+            padding: 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        .btn {
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+            border: none;
+            font-size: 1.1rem;
+            padding: 15px 30px;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            border: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+        }
+
+        .table td {
+            padding: 12px 15px;
+            vertical-align: middle;
+            border-color: #f8f9fa;
+        }
+
+        .table-input {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 8px 10px;
+            width: 100%;
+        }
+
+        .table-input:focus {
+            border-color: #dc3545;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        .payment-options {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .payment-option input[type="radio"] {
+            transform: scale(1.2);
+        }
+
+        .generate-button {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner-border {
+            color: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .form-section {
+                padding: 20px 15px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .payment-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .table-input {
+                font-size: 0.9rem;
+                padding: 6px 8px;
+            }
+        }
+    </style>
+</head>
+
+<body ng-controller="OrcamentoController">
+    <div class="container-fluid">
+        <div class="main-container">
+            <!-- Cabeçalho -->
+            <div class="header">
+                <h1><i class="fas fa-car"></i> F. AUTOS</h1>
+                <p>Sistema de Orçamento - Pintura e Funilaria Automotiva</p>
+            </div>
+
+            <!-- Formulário de Dados do Cliente -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="fas fa-user"></i>
+                    Dados do Cliente
+                </h3>
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label">Nome do Cliente *</label>
+                        <input type="text" class="form-control" ng-model="orcamento.cliente.nome"
+                            placeholder="Digite o nome completo do cliente" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Telefone *</label>
+                        <input type="text" class="form-control" ng-model="orcamento.cliente.telefone"
+                            placeholder="(85) 99999-9999" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label">Endereço</label>
+                        <input type="text" class="form-control" ng-model="orcamento.cliente.endereco"
+                            placeholder="Rua, número, complemento">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Bairro</label>
+                        <input type="text" class="form-control" ng-model="orcamento.cliente.bairro"
+                            placeholder="Nome do bairro">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Modelo do Veículo *</label>
+                        <input type="text" class="form-control" ng-model="orcamento.cliente.modeloVeiculo"
+                            placeholder="Ex: Honda Civic 2020" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Placa *</label>
+                        <input type="text" class="form-control" ng-model="orcamento.cliente.placaVeiculo"
+                            placeholder="ABC-1234" style="text-transform: uppercase" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Forma de Pagamento *</label>
+                        <div class="payment-options">
+                            <div class="payment-option">
+                                <input type="radio" id="avista" ng-model="orcamento.cliente.formaPagamento"
+                                    value="A_VISTA">
+                                <label for="avista">À Vista</label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="cartao" ng-model="orcamento.cliente.formaPagamento"
+                                    value="CARTAO">
+                                <label for="cartao">Cartão</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário de Serviços -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="fas fa-tools"></i>
+                    Serviços Prestados
+                </h3>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 15%">Quantidade</th>
+                                <th style="width: 55%">Descrição</th>
+                                <th style="width: 20%">Valor (R$)</th>
+                                <th style="width: 10%">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="servico in orcamento.servicos track by $index">
+                                <td>
+                                    <input type="number" class="table-input" ng-model="servico.quantidade" min="1"
+                                        placeholder="1">
+                                </td>
+                                <td>
+                                    <input type="text" class="table-input" ng-model="servico.descricao"
+                                        placeholder="Descrição do serviço">
+                                </td>
+                                <td>
+                                    <input type="number" class="table-input" ng-model="servico.valor" step="0.01"
+                                        min="0" placeholder="0,00">
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" ng-click="removerServico($index)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-if="orcamento.servicos.length === 0">
+                                <td colspan="4" class="text-center text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Nenhum serviço adicionado. Clique em "Adicionar Serviço" para começar.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-primary" ng-click="adicionarServico()">
+                        <i class="fas fa-plus"></i> Adicionar Serviço
+                    </button>
+                </div>
+
+                <div ng-if="orcamento.servicos.length > 0" class="mt-3">
+                    <div class="row">
+                        <div class="col-md-6 offset-md-6">
+                            <div class="alert alert-info">
+                                <strong>Total dos Serviços: R$ {{ calcularTotalServicos() | number:2 }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário de Peças -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="fas fa-cog"></i>
+                    Peças para Compra pelo Cliente
+                </h3>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 70%">Nome da Peça</th>
+                                <th style="width: 20%">Valor (R$)</th>
+                                <th style="width: 10%">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="peca in orcamento.pecas track by $index">
+                                <td>
+                                    <input type="text" class="table-input" ng-model="peca.nome"
+                                        placeholder="Nome da peça">
+                                </td>
+                                <td>
+                                    <input type="number" class="table-input" ng-model="peca.valor" step="0.01" min="0"
+                                        placeholder="0,00">
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" ng-click="removerPeca($index)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-if="orcamento.pecas.length === 0">
+                                <td colspan="3" class="text-center text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Nenhuma peça adicionada. Clique em "Adicionar Peça" se necessário.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-primary" ng-click="adicionarPeca()">
+                        <i class="fas fa-plus"></i> Adicionar Peça
+                    </button>
+                </div>
+            </div>
+
+            <!-- Botão de Gerar PDF -->
+            <div class="generate-button">
+                <div class="loading" ng-class="{show: gerando}">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p class="mt-2">Gerando orçamento...</p>
+                </div>
+
+                <button class="btn btn-success btn-lg" ng-click="gerarPdf()"
+                    ng-disabled="!validarFormulario() || gerando">
+                    <i class="fas fa-file-pdf"></i>
+                    {{ gerando ? 'Gerando...' : 'Gerar Orçamento PDF' }}
+                </button>
+
+                <div ng-if="!validarFormulario()" class="mt-3">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Atenção:</strong> Preencha pelo menos o nome, telefone, veículo, placa e forma de
+                        pagamento para gerar o orçamento.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        angular.module('orcamentoApp', [])
+            .controller('OrcamentoController', function ($scope, $http) {
+                // Inicialização dos dados
+                $scope.orcamento = {
+                    cliente: {
+                        nome: '',
+                        endereco: '',
+                        bairro: '',
+                        telefone: '',
+                        formaPagamento: 'A_VISTA',
+                        modeloVeiculo: '',
+                        placaVeiculo: ''
+                    },
+                    servicos: [],
+                    pecas: []
+                };
+
+                $scope.gerando = false;
+
+                // Funções para gerenciar serviços
+                $scope.adicionarServico = function () {
+                    $scope.orcamento.servicos.push({
+                        quantidade: 1,
+                        descricao: '',
+                        valor: 0
+                    });
+                };
+
+                $scope.removerServico = function (index) {
+                    $scope.orcamento.servicos.splice(index, 1);
+                };
+
+                // Funções para gerenciar peças
+                $scope.adicionarPeca = function () {
+                    $scope.orcamento.pecas.push({
+                        nome: '',
+                        valor: 0
+                    });
+                };
+
+                $scope.removerPeca = function (index) {
+                    $scope.orcamento.pecas.splice(index, 1);
+                };
+
+                // Calcular total dos serviços
+                $scope.calcularTotalServicos = function () {
+                    return $scope.orcamento.servicos.reduce(function (total, servico) {
+                        return total + (parseFloat(servico.valor) || 0);
+                    }, 0);
+                };
+
+                // Validar formulário
+                $scope.validarFormulario = function () {
+                    const cliente = $scope.orcamento.cliente;
+                    return cliente.nome &&
+                        cliente.telefone &&
+                        cliente.modeloVeiculo &&
+                        cliente.placaVeiculo &&
+                        cliente.formaPagamento;
+                };
+
+                // Gerar PDF
+                $scope.gerarPdf = function () {
+                    if (!$scope.validarFormulario()) {
+                        alert('Por favor, preencha todos os campos obrigatórios.');
+                        return;
+                    }
+
+                    $scope.gerando = true;
+
+                    const dados = angular.copy($scope.orcamento);
+
+                    // Filtrar serviços e peças vazios
+                    dados.servicos = dados.servicos.filter(s => s.descricao && s.valor > 0);
+                    dados.pecas = dados.pecas.filter(p => p.nome && p.valor > 0);
+
+                    $http.post('https://orcamento-system-backend-teste-production.up.railway.app', dados, {
+                        responseType: 'arraybuffer'
+                    })
+                        .then(function (response) {
+                            // Criar blob e fazer download
+                            const blob = new Blob([response.data], { type: 'application/pdf' });
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `orcamento_${dados.cliente.nome.replace(/\s+/g, '_')}_${new Date().getTime()}.pdf`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            window.URL.revokeObjectURL(url);
+
+                            $scope.gerando = false;
+                            alert('Orçamento gerado com sucesso!');
+                        })
+                        .catch(function (error) {
+                            console.error('Erro ao gerar PDF:', error);
+                            $scope.gerando = false;
+                            alert('Erro ao gerar o orçamento. Tente novamente.');
+                        });
+                };
+
+                // Adicionar um serviço inicial
+                $scope.adicionarServico();
+            });
+    </script>
+</body>
+
+</html>

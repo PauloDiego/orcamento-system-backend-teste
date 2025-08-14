@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/orcamentos")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://fautos-orcamentos.netlify.app")
 public class OrcamentoController {
 
     @Autowired

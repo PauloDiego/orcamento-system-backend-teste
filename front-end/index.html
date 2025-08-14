@@ -513,7 +513,7 @@
                     dados.servicos = dados.servicos.filter(s => s.descricao && s.valor > 0);
                     dados.pecas = dados.pecas.filter(p => p.nome && p.valor > 0);
 
-                    $http.post('https://orcamento-system-backend-teste-production.up.railway.app', dados, {
+                    $http.post('orcamento-system-backend-teste-production.up.railway.app', dados, {
                         responseType: 'arraybuffer'
                     })
                         .then(function (response) {

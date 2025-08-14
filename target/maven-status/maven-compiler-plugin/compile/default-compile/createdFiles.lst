@@ -1,0 +1,13 @@
+com\fautos\dto\OrcamentoRequest$PecaDTO.class
+com\fautos\model\Peca.class
+com\fautos\model\Orcamento.class
+com\fautos\model\Servico.class
+com\fautos\service\PdfService.class
+com\fautos\controller\OrcamentoController.class
+com\fautos\dto\OrcamentoRequest$ClienteDTO.class
+com\fautos\model\Cliente.class
+com\fautos\repository\OrcamentoRepository.class
+com\fautos\OrcamentoSystemApplication.class
+com\fautos\dto\OrcamentoRequest.class
+com\fautos\dto\OrcamentoRequest$ServicoDTO.class
+com\fautos\service\OrcamentoService.class
